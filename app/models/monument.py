@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Float, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
 from app.models.mixins import SoftDeleteMixin, TimestampMixin
+
+if TYPE_CHECKING:
+    from app.models.monument_translation import MonumentTranslation
 
 
 class Monument(Base, TimestampMixin, SoftDeleteMixin):
@@ -13,3 +18,7 @@ class Monument(Base, TimestampMixin, SoftDeleteMixin):
     lon: Mapped[float] = mapped_column(Float)
     image_url: Mapped[str] = mapped_column(String)
     sort_order: Mapped[int] = mapped_column(Integer)
+    translations: Mapped[list["MonumentTranslation"]] = relationship(
+        back_populates="monument",
+        cascade="all, delete-orphan",
+    )
