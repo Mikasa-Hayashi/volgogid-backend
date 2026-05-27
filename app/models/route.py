@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
 from app.models.mixins import SoftDeleteMixin, TimestampMixin
+
+if TYPE_CHECKING:
+    from app.models.route_translation import RouteTranslation
 
 
 class Route(Base, TimestampMixin, SoftDeleteMixin):
@@ -11,3 +16,8 @@ class Route(Base, TimestampMixin, SoftDeleteMixin):
     id: Mapped[str] = mapped_column(String, primary_key=True)
     cover_monument_id: Mapped[str] = mapped_column(String)
     sort_order: Mapped[int] = mapped_column(Integer)
+
+    translations: Mapped[list["RouteTranslation"]] = relationship(
+        back_populates="route",
+        cascade="all, delete-orphan",
+    )
