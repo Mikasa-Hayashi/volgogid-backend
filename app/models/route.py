@@ -7,6 +7,7 @@ from app.models.base import Base
 from app.models.mixins import SoftDeleteMixin, TimestampMixin
 
 if TYPE_CHECKING:
+    from app.models.route_stop import RouteStop
     from app.models.route_translation import RouteTranslation
 
 
@@ -20,4 +21,10 @@ class Route(Base, TimestampMixin, SoftDeleteMixin):
     translations: Mapped[list["RouteTranslation"]] = relationship(
         back_populates="route",
         cascade="all, delete-orphan",
+    )
+
+    stops: Mapped[list["RouteStop"]] = relationship(
+        back_populates="route",
+        cascade="all, delete-orphan",
+        order_by="RouteStop.order_index",
     )
