@@ -1,12 +1,11 @@
-from datetime import datetime
-
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
+from app.models.mixins import TimestampMixin
 
 
-class MonumentTranslation(Base):
+class MonumentTranslation(Base, TimestampMixin):
     __tablename__ = "monument_translations"
 
     monument_id: Mapped[str] = mapped_column(
@@ -16,4 +15,3 @@ class MonumentTranslation(Base):
     lang: Mapped[str] = mapped_column(String, primary_key=True)
     field_key: Mapped[str] = mapped_column(String, primary_key=True)
     field_value: Mapped[str] = mapped_column(String)
-    updated_at: Mapped[datetime] = mapped_column(DateTime)
