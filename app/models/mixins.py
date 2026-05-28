@@ -13,4 +13,8 @@ class TimestampMixin:
 
 
 class SoftDeleteMixin:
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
+    deleted: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
