@@ -7,3 +7,7 @@ class MonumentResponse(BaseModel):
     lon: float
     image_url: str
     sort_order: int
+
+    model_config = {
+        "from_attributes": True,
+    }
