@@ -17,9 +17,13 @@ class MonumentTranslation(Base, TimestampMixin):
         ForeignKey("monuments.id"),
         primary_key=True,
     )
+
     lang: Mapped[str] = mapped_column(String, primary_key=True)
+
     field_key: Mapped[str] = mapped_column(String, primary_key=True)
+
     field_value: Mapped[str] = mapped_column(String)
+
     monument: Mapped["Monument"] = relationship(
         back_populates="translations",
     )
