@@ -1,10 +1,14 @@
 from pydantic import BaseModel
 
 
-class TranslationSchema(BaseModel):
+class MonumentTranslationResponse(BaseModel):
     lang: str
     field_key: str
     field_value: str
+
+    model_config = {
+        "from_attributes": True,
+    }
 
 
 class MonumentDetailResponse(BaseModel):
@@ -12,5 +16,10 @@ class MonumentDetailResponse(BaseModel):
     lat: float
     lon: float
     image_url: str
+    sort_order: int
 
-    translations: list[TranslationSchema]
+    translations: list[MonumentTranslationResponse]
+
+    model_config = {
+        "from_attributes": True,
+    }
