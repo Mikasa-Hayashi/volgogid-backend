@@ -23,10 +23,12 @@ class Route(Base, TimestampMixin, SoftDeleteMixin):
     translations: Mapped[list["RouteTranslation"]] = relationship(
         back_populates="route",
         cascade="all, delete-orphan",
+        lazy="selectin",
     )
 
     stops: Mapped[list["RouteStop"]] = relationship(
         back_populates="route",
         cascade="all, delete-orphan",
         order_by="RouteStop.order_index",
+        lazy="selectin",
     )
