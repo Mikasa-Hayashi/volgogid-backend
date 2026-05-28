@@ -25,4 +25,5 @@ class Monument(Base, TimestampMixin, SoftDeleteMixin):
     translations: Mapped[list["MonumentTranslation"]] = relationship(
         back_populates="monument",
         cascade="all, delete-orphan",
+        lazy="selectin",
     )
