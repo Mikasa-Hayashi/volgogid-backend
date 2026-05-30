@@ -4,13 +4,14 @@ from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
+from app.models.mixins import TimestampMixin
 
 if TYPE_CHECKING:
     from app.models.monument import Monument
     from app.models.route import Route
 
 
-class RouteStop(Base):
+class RouteStop(Base, TimestampMixin):
     __tablename__ = "route_stops"
 
     route_id: Mapped[str] = mapped_column(
