@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -48,6 +48,26 @@ async def get_monuments_paginated(
         .order_by(Monument.sort_order)
         .limit(limit)
         .offset(offset)
+    )
+
+    result = await db.execute(stmt)
+
+    return list(result.scalars().all())
+
+
+async def search_monuments(
+    db: AsyncSession,
+    query: str,
+    limit: int = 20,
+) -> list[Monument]:
+    stmt = (
+        select(Monument)
+        .where(
+            Monument.deleted.is_(False),
+        )
+        .where(Monument.id.ilike(f"%{query}%"))
+        .order_by(Monument.sort_order)
+        .limit(limit)
     )
 
     result = await db.execute(stmt)
