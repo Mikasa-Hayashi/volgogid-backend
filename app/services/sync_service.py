@@ -102,7 +102,22 @@ async def sync_data(
         since,
     )
 
-    translations = await get_updated_monument_translations(
+    monument_translations = await get_updated_monument_translations(
+        db,
+        since,
+    )
+
+    routes = await get_updated_routes(
+        db,
+        since,
+    )
+
+    route_stops = await get_updated_route_stops(
+        db,
+        since,
+    )
+
+    route_translations = await get_updated_route_translations(
         db,
         since,
     )
@@ -112,11 +127,19 @@ async def sync_data(
         since,
     )
 
+    deleted_routes = await get_deleted_route_ids(
+        db,
+        since,
+    )
+
     return {
         "monuments": monuments,
-        "monument_translations": translations,
+        "monument_translations": monument_translations,
+        "routes": routes,
+        "route_stops": route_stops,
+        "route_translations": route_translations,
         "deleted_ids": {
             "monuments": deleted_monuments,
-            "routes": [],
+            "routes": deleted_routes,
         },
     }
