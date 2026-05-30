@@ -27,3 +27,17 @@ async def get_updated_translations(
     result = await db.execute(stmt)
 
     return list(result.scalars().all())
+
+
+async def get_deleted_monument_ids(
+    db: AsyncSession,
+    since: datetime,
+) -> list[str]:
+    stmt = select(Monument.id).where(
+        Monument.deleted.is_(True),
+        Monument.updated_at > since,
+    )
+
+    result = await db.execute(stmt)
+
+    return list(result.scalars().all())
