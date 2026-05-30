@@ -1,8 +1,9 @@
-from sqlalchemy import or_, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.monument import Monument
+from app.models.monument_translation import MonumentTranslation
 
 
 async def get_monuments(db: AsyncSession) -> list[Monument]:
@@ -60,15 +61,22 @@ async def search_monuments(
     query: str,
     limit: int = 20,
 ) -> list[Monument]:
-    stmt = (
-        select(Monument)
+    id_stmt = (
+        select(MonumentTranslation.monument_id)
         .where(
-            Monument.deleted.is_(False),
+            MonumentTranslation.field_key == "name",
+            MonumentTranslation.field_value.ilike(f"%{query}%"),
         )
-        .where(Monument.id.ilike(f"%{query}%"))
-        .order_by(Monument.sort_order)
         .limit(limit)
     )
+
+    res = await db.execute(id_stmt)
+    ids = res.scalars().all()
+
+    if not ids:
+        return []
+
+    stmt = select(Monument).where(Monument.id.in_(ids))
 
     result = await db.execute(stmt)
 
