@@ -8,6 +8,7 @@ from app.services.monument_service import (
     get_monument_by_id,
     get_monuments,
     get_monuments_paginated,
+    search_monuments,
 )
 
 router = APIRouter()
@@ -55,3 +56,15 @@ async def monuments_list(
     db: AsyncSession = Depends(get_db),
 ):
     return await get_monuments_paginated(db, limit, offset)
+
+
+@router.get(
+    "/search",
+    response_model=list[MonumentResponse],
+)
+async def search(
+    q: str,
+    limit: int = Query(20, ge=1, le=50),
+    db: AsyncSession = Depends(get_db),
+):
+    return await search_monuments(db, q, limit)
