@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.schemas.monument import MonumentResponse
 from app.schemas.monument_detail import MonumentDetailResponse
-from app.services.monument_service import get_monument_by_id, get_monuments
+from app.services.monument_service import (
+    get_monument_by_id,
+    get_monuments,
+    get_monuments_paginated,
+)
 
 router = APIRouter()
 
@@ -39,3 +43,15 @@ async def monument_detail(
         )
 
     return monument
+
+
+@router.get(
+    "",
+    response_model=list[MonumentResponse],
+)
+async def monuments_list(
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    db: AsyncSession = Depends(get_db),
+):
+    return await get_monuments_paginated(db, limit, offset)
