@@ -21,7 +21,7 @@ async def get_updated_monuments(
     return list(result.scalars().all())
 
 
-async def get_updated_translations(
+async def get_updated_monument_translations(
     db: AsyncSession,
     since: datetime,
 ) -> list[MonumentTranslation]:
@@ -102,7 +102,7 @@ async def sync_data(
         since,
     )
 
-    translations = await get_updated_translations(
+    translations = await get_updated_monument_translations(
         db,
         since,
     )
