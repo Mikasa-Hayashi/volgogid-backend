@@ -41,3 +41,32 @@ async def get_deleted_monument_ids(
     result = await db.execute(stmt)
 
     return list(result.scalars().all())
+
+
+async def sync_data(
+    db: AsyncSession,
+    since: datetime,
+):
+    monuments = await get_updated_monuments(
+        db,
+        since,
+    )
+
+    translations = await get_updated_translations(
+        db,
+        since,
+    )
+
+    deleted_monuments = await get_deleted_monument_ids(
+        db,
+        since,
+    )
+
+    return {
+        "monuments": monuments,
+        "monument_translations": translations,
+        "deleted_ids": {
+            "monuments": deleted_monuments,
+            "routes": [],
+        },
+    }
