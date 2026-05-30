@@ -35,3 +35,21 @@ async def get_monument_by_id(
     result = await db.execute(stmt)
 
     return result.scalar_one_or_none()
+
+
+async def get_monuments_paginated(
+    db: AsyncSession,
+    limit: int,
+    offset: int,
+) -> list[Monument]:
+    stmt = (
+        select(Monument)
+        .where(Monument.deleted.is_(False))
+        .order_by(Monument.sort_order)
+        .limit(limit)
+        .offset(offset)
+    )
+
+    result = await db.execute(stmt)
+
+    return list(result.scalars().all())
